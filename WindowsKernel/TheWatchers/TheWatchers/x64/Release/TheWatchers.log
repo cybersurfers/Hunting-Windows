@@ -1,0 +1,22 @@
+﻿  Building 'TheWatchers' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  Stamping x64\Release\TheWatchers.inf
+  Stamping [Version] section with DriverVer=01/28/2020,22.9.28.860
+  Source.cpp
+  TheWatchers.vcxproj -> C:\Users\ch3rn0byl\Desktop\Hunting-Windows\WindowsKernel\TheWatchers\x64\Release\TheWatchers.sys
+  Done Adding Additional Store
+  Successfully signed: C:\Users\ch3rn0byl\Desktop\Hunting-Windows\WindowsKernel\TheWatchers\x64\Release\TheWatchers.sys
+  
+  ........................
+  Signability test complete.
+  
+  Errors:
+  None
+  
+  Warnings:
+  None
+  
+  Catalog generation complete.
+  C:\Users\ch3rn0byl\Desktop\Hunting-Windows\WindowsKernel\TheWatchers\x64\Release\TheWatchers\thewatchers.cat
+  Done Adding Additional Store
+  Successfully signed: C:\Users\ch3rn0byl\Desktop\Hunting-Windows\WindowsKernel\TheWatchers\x64\Release\TheWatchers\thewatchers.cat
+  
