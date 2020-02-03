@@ -1,0 +1,5 @@
+#pragma once
+#include <ntddk.h>
+
+#define DRIVER_HOOK CTL_CODE(FILE_DEVICE_UNKNOWN, 0x801, METHOD_NEITHER, FILE_ANY_ACCESS)
+#define MODULE_POOLTAG 'ch3r'

@@ -1,7 +1,18 @@
 ﻿  Building 'TheWatchers' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
   Stamping x64\Release\TheWatchers.inf
-  Stamping [Version] section with DriverVer=01/28/2020,22.9.28.860
+  Stamping [Version] section with DriverVer=02/03/2020,16.28.33.131
   Source.cpp
+  
+  Searching libraries
+      Searching C:\Program Files (x86)\Windows Kits\10\lib\10.0.18362.0\km\x64\BufferOverflowFastFailK.lib:
+      Searching C:\Program Files (x86)\Windows Kits\10\lib\10.0.18362.0\km\x64\ntoskrnl.lib:
+  
+  Finished searching libraries
+  
+  Searching libraries
+      Searching C:\Program Files (x86)\Windows Kits\10\lib\10.0.18362.0\km\x64\BufferOverflowFastFailK.lib:
+  
+  Finished searching libraries
   TheWatchers.vcxproj -> C:\Users\ch3rn0byl\Desktop\Hunting-Windows\WindowsKernel\TheWatchers\x64\Release\TheWatchers.sys
   Done Adding Additional Store
   Successfully signed: C:\Users\ch3rn0byl\Desktop\Hunting-Windows\WindowsKernel\TheWatchers\x64\Release\TheWatchers.sys
