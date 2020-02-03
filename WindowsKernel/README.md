@@ -10,22 +10,22 @@ This is helpful because it will allow you to see what the most commonly used IOC
 5. Everything else    
 
 This can be modified to do whatever you want, but to be clear, this *isn't* malware. This just aids in finding potential vulnerabilities when you're hunting in the upside down of Windows.    
-In an elevated command prompt, you would need to issue the following commands to be able to use this driver:    
+In an elevated command prompt, you would need to issue the following commands to be able to use this driver and then reboot:    
     
     bcdedit /set /nointegritychecks on    
     bcdedit /set testsigning on    
    
 Then to re-enable them, set them to off. You'll know if you did it correctly because on the lower right of the screen, you'll see a Test Mode watermark.   
 
-So far all I have is just hooking one function, no biggie. The heavy lifting will come soon. Here is a sample of the output:    
-![pic](https://github.com/cybersurfers/Hunting-Windows/blob/master/WindowsKernel/Images/Experiment1.PNG)    
+So far, it's coming together:    
+![pic](https://github.com/cybersurfers/Hunting-Windows/blob/master/WindowsKernel/Images/updated.PNG)    
 
-The address displayed in the picture is the adress to the function I am hooking. This can also be used to display the address of the dispatch table that houses all of the IOCTL's    
+The address displayed in the picture is the adress to the function(s) I am hooking. This can also be used to display the address of the dispatch table that houses all of the IOCTL's    
 
 # To-Dos    
 
 
-1. The client will be able to specify what driver to hook. Not all will be able to get hooked.     
+~~1. The client will be able to specify what driver to hook. Not all will be able to get hooked.~~     
 2. Might add the ability to make it part of the context menu when you right click    
 3. Do a replay type functionality to fuzz    
 4. Pretend I know what I'm doing
