@@ -30,3 +30,4 @@ The address displayed in the picture is the adress to the function(s) I am hooki
 3. Do a replay type functionality to fuzz    
 4. Pretend I know what I'm doing
 5. Parse IRP_MJ_DEVICE_CONTROL to get alll the information being passed back and forth
+6. Add the ability to watch the traffic through cmd rather than DbgView 
