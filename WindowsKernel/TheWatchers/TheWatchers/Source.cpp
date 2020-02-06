@@ -3,13 +3,31 @@
 #include "Common.h"
 #include "UndocumentedHelpers.h"
 
-UNICODE_STRING g_DeviceName = RTL_CONSTANT_STRING(L"\\Device\\ch3rn0byl");
-UNICODE_STRING g_SymbolicName = RTL_CONSTANT_STRING(L"\\??\\ch3rn0byl");
-
-NTSTATUS HookedDriverDispatch(PDRIVER_OBJECT DriverObject)
+struct hDriverDispatch
 {
-	UNREFERENCED_PARAMETER(DriverObject);
-	DbgPrint("HookedDriverDispatch: If you see this, its hooked");
+	PVOID pDriverDispatch = NULL;
+	PVOID pDriverUnload = NULL;
+} g_DispatchRoutine, * p_DispatchRoutine;
+
+//NTSTATUS HookedDriverDispatch(PDRIVER_OBJECT DriverObject, PIRP Irp)
+NTSTATUS HookedDriverDispatch(PDRIVER_OBJECT, PIRP Irp)
+{
+	auto stack = IoGetCurrentIrpStackLocation(Irp);
+	ULONG dwIoControlCode = stack->Parameters.DeviceIoControl.IoControlCode;
+	//ULONG dInputBufferLength = stack->Parameters.DeviceIoControl.InputBufferLength;
+	DbgPrint("Received a call from: %wZ\n", stack->DeviceObject->DriverObject->DriverName);
+
+	DbgPrint("--> I/O Control Code: 0x%08x\n", dwIoControlCode);
+
+	DbgPrint("--> Input Buffer Length: 0x%x", stack->Parameters.DeviceIoControl.InputBufferLength);
+	DbgPrint("--> Output Buffer Length: 0x%x", stack->Parameters.DeviceIoControl.OutputBufferLength);
+	DbgPrint("--> Input Buffer: %p", stack->Parameters.DeviceIoControl.Type3InputBuffer);
+
+	DbgPrint("--> AssociatedIrp SystemBuffer: %p", Irp->AssociatedIrp.SystemBuffer);
+
+	// Still gotta pass the irp for it to take effect
+
+	DbgPrint("\n");
 	return STATUS_SUCCESS;
 }
 
@@ -39,6 +57,21 @@ NTSTATUS DriverCreateClose(PDEVICE_OBJECT, PIRP Irp)
 
 	DbgPrint("DriverCreateClose completed successfully\n");
 	return Status;
+}
+
+NTSTATUS DriverUnhook()
+{
+	// Restore the functions
+	DbgPrint("Unhooking unload");
+	InterlockedExchangePointer(reinterpret_cast<PVOID*>(&HookedDriverUnload), g_DispatchRoutine.pDriverUnload);
+	for (unsigned int i = 0; i < IRP_MJ_MAXIMUM_FUNCTION; i++)
+	{
+		DbgPrint("unhooking %d", i);
+		InterlockedExchangePointer(reinterpret_cast<PVOID*>(&HookedDriverDispatch), g_DispatchRoutine.pDriverDispatch);
+	}
+
+	DbgPrint("DriverUnhook completed succesfully!\n");
+	return STATUS_SUCCESS;
 }
 
 NTSTATUS DriverHook(const char* TargetModule)
@@ -77,10 +110,16 @@ NTSTATUS DriverHook(const char* TargetModule)
 	//DbgPrint("got this name: %wZ", pHijackedDriverObject->DriverName);
 
 	// Hooks DriverUnload for now
-	auto pDriverUnload = InterlockedExchangePointer(reinterpret_cast<PVOID*>(&pHijackedDriverObject->DriverUnload), HookedDriverUnload);
-	auto pDriverDispatch = InterlockedExchangePointer(reinterpret_cast<PVOID*>(pHijackedDriverObject->MajorFunction), HookedDriverDispatch);
-	DbgPrint("DriverDispatch is at: %p", pDriverDispatch);
-	DbgPrint("DriverUnload is at: %p", pDriverUnload);
+	//auto pDriverUnload = InterlockedExchangePointer(reinterpret_cast<PVOID*>(&pHijackedDriverObject->DriverUnload), HookedDriverUnload);
+	g_DispatchRoutine.pDriverUnload = InterlockedExchangePointer(reinterpret_cast<PVOID*>(&pHijackedDriverObject->DriverUnload), HookedDriverUnload);
+	//auto pDriverDispatch = InterlockedExchangePointer(reinterpret_cast<PVOID*>(pHijackedDriverObject->MajorFunction), HookedDriverDispatch);
+	//g_DispatchRoutine.pDriverDispatch = InterlockedExchangePointer(reinterpret_cast<PVOID*>(pHijackedDriverObject->MajorFunction), HookedDriverDispatch);
+	for (unsigned int i = 0; i < IRP_MJ_MAXIMUM_FUNCTION; i++)
+	{
+		g_DispatchRoutine.pDriverDispatch = InterlockedExchangePointer(reinterpret_cast<PVOID*>(&pHijackedDriverObject->MajorFunction[i]), HookedDriverDispatch);
+	}
+	DbgPrint("g_DriverDispatch is at: %p", g_DispatchRoutine.pDriverDispatch);
+	DbgPrint("g_DriverUnload is at: %p", g_DispatchRoutine.pDriverUnload);
 
 	RtlFreeUnicodeString(&ModuleName);
 	ObReferenceObject(pHijackedDriverObject);
@@ -90,7 +129,7 @@ NTSTATUS DriverHook(const char* TargetModule)
 NTSTATUS DriverDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 {
 	NTSTATUS Status = STATUS_NOT_SUPPORTED;
-	
+
 	PIO_STACK_LOCATION StackLocation = IoGetCurrentIrpStackLocation(Irp);
 	DWORD32 dwIoControlCode = StackLocation->Parameters.DeviceIoControl.IoControlCode;
 
@@ -100,6 +139,10 @@ NTSTATUS DriverDeviceControl(PDEVICE_OBJECT, PIRP Irp)
 	{
 	case DRIVER_HOOK:
 		Status = DriverHook(static_cast<const char*>(UserBuffer));
+		break;
+	case DRIVER_UNHOOK:
+		Status = DriverUnhook();
+		break;
 	default:
 		break;
 	}

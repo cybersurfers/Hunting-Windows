@@ -1,6 +1,6 @@
 ﻿  Building 'TheWatchers' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
   Stamping x64\Release\TheWatchers.inf
-  Stamping [Version] section with DriverVer=02/03/2020,16.28.33.131
+  Stamping [Version] section with DriverVer=02/06/2020,16.17.9.730
   Source.cpp
   
   Searching libraries
