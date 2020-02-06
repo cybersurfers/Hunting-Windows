@@ -28,6 +28,6 @@ The address displayed in the picture is the adress to the function(s) I am hooki
 ~~1. The client will be able to specify what driver to hook. Not all will be able to get hooked.~~     
 2. Might add the ability to make it part of the context menu when you right click    
 3. Do a replay type functionality to fuzz    
-4. Pretend I know what I'm doing
-5. Parse IRP_MJ_DEVICE_CONTROL to get alll the information being passed back and forth
-6. Add the ability to watch the traffic through cmd rather than DbgView 
+4. Pretend I know what I'm doing    
+5. Parse IRP_MJ_DEVICE_CONTROL to get alll the information being passed back and forth    
+6. Add the ability to watch the traffic through cmd rather than DbgView     
