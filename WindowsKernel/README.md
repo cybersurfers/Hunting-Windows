@@ -18,7 +18,7 @@ In an elevated command prompt, you would need to issue the following commands to
 Then to re-enable them, set them to off. You'll know if you did it correctly because on the lower right of the screen, you'll see a Test Mode watermark.   
 
 So far, it's coming together:    
-![pic](https://github.com/cybersurfers/Hunting-Windows/blob/master/WindowsKernel/Images/updated.PNG)    
+![pic](https://github.com/cybersurfers/Hunting-Windows/blob/master/WindowsKernel/Images/functionalSomewhat.png)    
 
 The address displayed in the picture is the adress to the function(s) I am hooking. This can also be used to display the address of the dispatch table that houses all of the IOCTL's    
 
